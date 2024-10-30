@@ -3,5 +3,26 @@
 {% block title%}Главная страница{%endblock%}
 
 {%block content%}
-<h1>HELLO</h1>
+<section class="page-block">
+
+    <div class="container page-block__row">
+
+        <div class="page-block__item">
+            <h1 class="title">Разделы в Boardify</h1>
+            <div class="categories-list">
+      
+                <div class="categories-card">
+                    <img src="{{ post.image.url }}" alt="{{post.title}}" class="news-card__image">
+                    <div class="categories-card__content">
+                        <h3 class="categories-card__title">{{post.title}}</h3>
+                    </div>
+                </div>
+                 {% endfor %}
+                </div>
+            </div>
+        </div>
+
+  
+    </div>
+</section>
 {%endblock%}
