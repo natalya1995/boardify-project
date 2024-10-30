@@ -1,0 +1,69 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%} {%endblock%}</title>
+    <link rel="stylesheet" href="{%static './css/style.css'%}">
+
+</head>
+<body>
+    <header class="header">
+        <div class="container header-row">
+            <a href="{%static './images/logo.svg'%}" class="logo"></a>
+            <form action="" class="search-form">
+                <input type="text" class="search-form__input" placeholder="Поиск по объявлениям">
+                <button type="submit" class="search-form__button">
+                    <img src="{%static './images/search-icon.svg'%}" alt="Search">
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <main>
+    {%block content%}
+
+    {%endblock%}
+    </main>
+    
+    <footer class="footer">
+        <div class="container footer-row">
+            <ul class="footer-links">
+                <li class="footer-links__item">
+                    <a href="#" class="footer-links__link">
+                        <img src="{%static './images/footer/home.svg'%}" alt="" class="footer-link__icon">
+                        <span class="footer-link__text">Главная</span>
+                    </a>
+                </li>
+                 <li class="footer-links__item">
+                        <a href="#" class="footer-links__link">
+                            <img src="{%static './images/footer/boards.svg'%}" alt="" class="footer-link__icon">
+                            <span class="footer-link__text">Oбъявления</span>
+                        </a>
+                    </li>
+    
+                 <li class="footer-links__item">
+                            <a href="#" class="footer-links__link active">
+                                <img src="{%static './images/footer/add.svg'%}" alt="" class="footer-link__icon">
+                                <span class="footer-link__text">Подать</span>
+                            </a>
+                        </li>
+                        <li class="footer-links__item">
+                            <a href="#" class="footer-links__link">
+                                <img src="{%static './images/footer/categories.svg'%}" alt="" class="footer-link__icon">
+                                <span class="footer-link__text">Категории</span>
+                            </a>
+                        </li>
+        
+                     <li class="footer-links__item">
+                                <a href="#" class="footer-links__link">
+                                    <img src="{%static './images/footer/profile.svg'%}" alt="" class="footer-link__icon">
+                                    <span class="footer-link__text">Кабинет</span>
+                                </a>
+                            </li>
+            </ul>
+        </div>
+    </footer>
+</body>
+</html>
