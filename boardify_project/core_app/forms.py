@@ -15,13 +15,20 @@ class UserRegistrationForm(UserCreationForm):
         fields=['username','first_name','last_name','password1','password2']
 
 
-class UserLoginForm(AuthenticationForm):
+class UserLoginForm(forms.Form):
     username = forms.CharField(label="Имя пользователя", max_length=150, widget=forms.TextInput(attrs={'placeholder': 'Введите имя пользователя'}))
     password = forms.CharField(label="Пароль", widget=forms.PasswordInput(attrs={'placeholder': 'Введите пароль'}))
 
-    class Meta:
-        model=User
-        fields=['username','password']
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user:
+                raise forms.ValidationError("Invalid username or password")
+        return cleaned_data
 
 class BoardForm(forms.ModelForm):
     class Meta:
