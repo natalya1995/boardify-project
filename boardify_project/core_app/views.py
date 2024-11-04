@@ -8,33 +8,57 @@ from .forms import UserRegistrationForm,UserLoginForm,BoardForm,UserProfileForm
 
 
 def home_page(request):
-    categories=Category.objects.all()
-    last_board=Board.objects.filter(is_active_board=True).order_by('-created_at')[:8]
-    context={
-        'categories':categories,
-        'last_board':last_board
+    categories = Category.objects.all()
+    latest_boards = Board.objects.filter(is_active_board=True).order_by('-created_at')[:8]
+    context = {
+        'categories': categories,
+        'latest_boards': latest_boards
     }
-    return render(request, "./client/home.html",context)
+    return render(request, './client/home.html', context)
 
 def all_boards_page(request):
-    board_list=Board.objects.filter(is_active_board=True).order_by('-created_at')
-    paginator=Paginator(board_list,12)
-    page_number=request.GET.get('page')
-    boards=paginator.get_page(page_number)
-    context={
-        'boards':boards,
-        'page_number':page_number
+    board_list = Board.objects.filter(is_active_board=True).order_by('-created_at')
+    paginator = Paginator(board_list, 12)
+    page_number = request.GET.get('page')
+    boards = paginator.get_page(page_number)
+    context = {
+        'boards': boards,
+        'page_number': page_number
     }
-    return render(request,"./client/all-boards.html",context)
+    return render(request, './client/all-boards.html', context)
 
 def categories_page(request):
-    categories=Category.objects.all()
-    lacations=Location.objects.all()
-    context={
-        'categories':categories,
-        'lacations':lacations
+    categories = Category.objects.all()
+    locations = Location.objects.all()
+    context = {
+        'categories': categories,
+        'locations': locations
     }
-    return render(request,"./client/categories.html",context)
+    return render(request, "./client/categories.html", context)
+
+def boards_by_category_page(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    board_list = Board.objects.filter(category=category, is_active_board=True).order_by('-created_at')
+    paginator = Paginator(board_list, 12)
+    page_number = request.GET.get('page')
+    boards = paginator.get_page(page_number)
+    context = {
+        'category': category, 
+        'boards': boards
+    }
+    return render(request, './client/boards-by-category.html', context)
+
+def boards_by_location_page(request, slug):
+    location = get_object_or_404(Location, slug=slug)
+    board_list = Board.objects.filter(location=location, is_active_board=True).order_by('-created_at')
+    paginator = Paginator(board_list, 12)
+    page_number = request.GET.get('page')
+    boards = paginator.get_page(page_number)
+    context = {
+        'location': location, 
+        'boards': boards
+    }
+    return render(request, './client/boards-by-location.html', context)
 
 def search_results_page(request):
     query=request.GET.get('q')
@@ -50,7 +74,7 @@ def search_results_page(request):
 
 def boards_by_category_page(request,slug):
     category=get_object_or_404(Category,slug=slug)
-    board_list=Board.objects.filter(category=category,is_avtive_board=True).order_by('-created_at')
+    board_list=Board.objects.filter(category=category,is_active_board=True).order_by('-created_at')
     paginator=Paginator(board_list,12)
     page_number=request.GET.get('page')
     boards=paginator.get_page(page_number)
@@ -62,7 +86,7 @@ def boards_by_category_page(request,slug):
 
 def boards_by_location_page(request,slug):
     location=get_object_or_404(Location,slug=slug)
-    board_list=Board.objects.filter(location=location,is_avtive_board=True).order_by('-created_at')
+    board_list=Board.objects.filter(location=location,is_active_board=True).order_by('-created_at')
     paginator=Paginator(board_list,12)
     page_number=request.GET.get('page')
     boards=paginator.get_page(page_number)
@@ -71,6 +95,7 @@ def boards_by_location_page(request,slug):
         'location':location
     }
     return render(request,"./client/boards-by-location.html",context)
+
 def board_detail_page(request,pk):
     board=get_object_or_404(Board,pk=pk)
     author=board.userprofile
@@ -79,6 +104,7 @@ def board_detail_page(request,pk):
         'author':author
     }
     return render(request,"./client/board-detail.html",context)
+
 def login_page(request):
     if request.method=="POST":
         form=UserLoginForm(request.POST)
@@ -112,6 +138,89 @@ def sign_up_page(request):
         'form':form
     }
     return render(request,"./user/sign-up.html",context)
+
 def logout_action(request):
     logout(request)
     return redirect('home_page')
+
+@login_required
+def profile_page(request):
+    profile,created=UserProfile.objects.get_or_create(user=request.user)
+    context={
+        'profile':profile
+    }
+    return render(request,"./user/profile.html",context)
+
+@login_required
+def user_boards_page(request):
+    user_profile=UserProfile.objects.get(user=request.user)
+    boards=Board.objects.filter(userprofile__user=request.user)
+    context={
+        'boards':boards
+    }
+    return render(request, "./user/user-boards.html",context)
+
+@login_required
+def create_board_page(request):
+    if request.method=="POST":
+        form=BoardForm(request.POST,request.FILES)
+        if form.is_valid():
+            board=form.save(commit=False)
+            board.userprofile=request.user.userprofile
+            board.is_active_board=False
+            board.save()
+            messages.success(request,"Объявление готово!")
+            return redirect('success_page')
+    else:
+        form=BoardForm()
+    context={
+        'form':form
+    }
+    return render(request,"./user/create-board.html",context)
+ 
+@login_required
+def success_page(request):
+    return render(request,"./user/success.html")
+
+@login_required
+def update_board_page(request,pk):
+    board=get_object_or_404(Board,pk=pk, userprofile__user=request.user)
+    if request.method=="POST":
+        form=BoardForm(request.POST,request.FILES,instance=board)
+        messages.success(request,"Объявление обнавлено!")
+        return redirect('user_board_page')
+    else:
+        form=BoardForm(instance=board)
+    context={
+        'board':board,
+        'form':form
+    }
+    return render(request,"./user/update-board.html",context)
+
+@login_required
+def delete_board_page(request, pk):
+    board = get_object_or_404(Board, pk=pk, userprofile__user=request.user)
+    if request.method == 'POST':
+        board.delete()
+        messages.success(request, 'Объявление удалено!')
+        return redirect('user_boards_page')
+    context = {
+        'board': board
+    }
+    return render(request, './client/delete-board.html', context)
+
+@login_required
+def create_or_update_profile_page(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Профиль успешно обновлен!' if not created else 'Профиль успешно создан!')
+            return redirect('profile_page')
+    else:
+        form = UserProfileForm(instance=profile)
+    context = {
+        'form': form
+    }
+    return render(request, './client/create-or-update-profile.html', context)

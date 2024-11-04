@@ -1,0 +1,17 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Удалить объявление{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="container">
+        <h2 class="title">Удалить объявление</h2>
+        <p class="mb-10">Вы действительно хотите удалить это объявление?</p>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <button class="btn is-danger">Да</button>
+            <a href="{% url 'user_boards_page' %}" class="btn is-primary">Нет</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

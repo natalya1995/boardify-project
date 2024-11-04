@@ -1,0 +1,33 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Категории{% endblock %}
+
+{% block content %}
+<section class="categories">
+    <div class="container">
+        <h2 class="title">Все категории</h2>
+        <div class="category-list">
+            {% for category in categories %}
+            <a href="{% url 'boards_by_category_page' slug=category.slug %}" class="category-item">
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" />
+                <span>{{ category.name }}</span>
+            </a>
+            {% endfor %}
+            <a href="{% url 'all_boards_page' %}" class="category-item">
+                <img src="{% static './images/all.svg' %}" alt="Всё" />
+                <span>Всё</span>
+            </a>
+        </div>
+    </div>
+</section>
+<section class="locations">
+    <div class="container">
+        <h2 class="title">По городу</h2>
+        <div class="location-list">
+            {% for location in locations %}
+            <a href="{% url 'boards_by_location_page' slug=location.slug %}" class="location-item">{{ location.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

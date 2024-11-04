@@ -1,0 +1,19 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}{% if profile %}Изменить профиль{% else %}Создать профиль{% endif %}{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="container">
+        <h2 class="title">{% if profile %}Изменить профиль{% else %}Создать профиль{% endif %}</h2>
+        
+        <form class="auth-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+            <div class="auth-form__row">
+                <button class="btn is-primary">{% if profile %}Изменить{% else %}Создать{% endif %}</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

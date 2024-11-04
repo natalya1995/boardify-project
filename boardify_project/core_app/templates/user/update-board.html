@@ -1,0 +1,19 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Изменить объявление{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="container">
+        <h2 class="title">Изменить объявление</h2>
+        
+        <form class="auth-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+            <div class="auth-form__row">
+                <button class="btn is-primary">Изменить</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

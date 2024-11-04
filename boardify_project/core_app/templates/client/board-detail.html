@@ -1,0 +1,28 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}{{ board.title }}{% endblock %}
+
+{% block content %}
+<section class="boards">
+    <div class="container">
+        <h2 class="title">{{board.title}}</h2>
+        <p class="mb-10"><strong>Опубликовано: </strong>{{board.created_at}}</p>
+
+        <img src="{{board.image.url}}" class="board-detail__img" alt="{{board.title}}">
+        <div class="board-detail-data">
+            <div class="board-detail__author">
+                <img src="" class="board-detail__avatar" alt="ЗАГОЛОВОК">
+                <div class="board-detail-author__data">
+                    <p>{{ author.user.first_name }}</p>
+                    <p><a href="#" class="red-link">{{ author.phone }}</a></p>
+                </div>
+            </div>
+            <p><strong>Местоположение: </strong><a href="" class="red-link"></a></p>
+            <p><strong>Категория: </strong><a href="{% url 'boards_by_category_page' slug=board.category.slug %}" class="red-link">{{ board.category.name }}</a></p>
+            <p><strong>Описание: </strong>{{ board.description }}</p>
+            <p><strong>Цена: </strong>{{ board.price }} &#8376;</p>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

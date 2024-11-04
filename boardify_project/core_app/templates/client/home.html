@@ -1,28 +1,42 @@
 {% extends '../base.html' %}
+{% load static %}
+{% block title %}Главная страница{% endblock %}
 
-{% block title%}Главная страница{%endblock%}
-
-{%block content%}
-<section class="page-block">
-
-    <div class="container page-block__row">
-
-        <div class="page-block__item">
-            <h1 class="title">Разделы в Boardify</h1>
-            <div class="categories-list">
-      
-                <div class="categories-card">
-                    <img src="{{ post.image.url }}" alt="{{post.title}}" class="news-card__image">
-                    <div class="categories-card__content">
-                        <h3 class="categories-card__title">{{post.title}}</h3>
-                    </div>
-                </div>
-                 {% endfor %}
-                </div>
-            </div>
+{% block content %}
+<section class="categories">
+    <div class="container">
+        <h2 class="title">Разделы в Boardify</h2>
+        <div class="category-list">
+            {% for category in categories %}
+            <a href="{% url 'boards_by_category_page' slug=category.slug %}" class="category-item">
+                <img src="{{ category.image.url }}" alt="{{category.name}}" />
+                <span>{{category.name}}</span>
+            </a>
+            {%endfor%}
+            <a href="{% url 'categories_page' %}" class="category-item">
+                <img src="{% static './images/all.svg' %}" alt="Всё" />
+                <span>Всё</span>
+            </a>
+         
         </div>
-
-  
     </div>
 </section>
-{%endblock%}
+<section class="boards">
+    <div class="container">
+        <h2 class="title">Новые объявления</h2>
+        <div class="board-list">
+            {% for board in latest_boards %}
+            <a href="{% url 'board_detail_page' pk=board.pk %}" class="board-item">
+                <img src="{{ board.image.url }}" alt="{{ board.title }}" class="board-item__img">
+                <h3 class="board-item__title">{{ board.title|truncatechars:22 }}</h3>
+                <strong class="board-item__price">{{ board.price }} ₸</strong>
+                <span class="board-item__location">{{ board.location }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        <div class="center">
+            <a href="{% url 'all_boards_page' %}" class="btn is-primary">Еще объявления</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

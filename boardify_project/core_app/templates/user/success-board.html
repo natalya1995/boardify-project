@@ -1,0 +1,16 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Ваше объявление на модерации{% endblock %}
+
+{% block content %}
+<section class="auth">
+    <div class="container">
+        <h2 class="title">Ваше объявление на модерации</h2>
+        <p>Ваше объявление на модерации</p>
+        <div class="action-row">
+            <a href="{% url 'user_boards_page' %}" class="btn is-primary">Мои объявления</a>
+            <a href="{% url 'home_page' %}" class="btn is-danger">Главная</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

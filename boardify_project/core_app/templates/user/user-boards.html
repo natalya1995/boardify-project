@@ -1,0 +1,35 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Мои объявления{% endblock %}
+
+{% block content %}
+<section class="boards">
+    <div class="container">
+        <h2 class="title">Мои объявления</h2>
+        {% if boards %}
+        <div class="user-board-list">
+            {% for board in boards %}
+            <div class="user-board-card">
+                <img src="{{ board.image.url }}" alt="{{ board.title }}" class="user-board-card__img">
+                <div class="user-board-card__data">
+                    <h3 class="user-board-card__title">{{ board.title }} {% if board.is_active_board == True %}<span class="success">Опубликовано</span>{% else %}<span class="waiting">На модерации</span>{% endif %}</h3>
+                    <p>{{ board.created_at }}</p>
+                    <a href="{% url 'board_detail_page' pk=board.pk %}" class="btn is-primary">Посмотерть</a>
+                    <a href="{% url 'update_board_page' pk=board.pk %}" class="btn is-warning">Изменить</a>
+                    <a href="{% url 'delete_board_page' pk=board.pk %}" class="btn is-danger">Удалить</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert">
+            <h3>У Вас нет активных объявлений</h3>
+            <p>Подайте новое или восстановите объявление из активных</p>
+        </div>
+        <div class="center">
+            <a href="{% url 'create_board_page' %}" class="btn is-primary">Подать объявление</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Профиль{% endblock %}
+
+{% block content %}
+{% if user.is_superuser %}
+<section class="profile">
+    <div class="container">
+        <h2 class="title">Администратор системы: @{{ user.username }}</h2>
+        <div class="action-row">
+            <a href="{% url 'admin:index' %}" class="btn is-warning">Админ панель</a>
+            <a href="{% url 'logout_action' %}" class="btn is-danger">Выход</a>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="profile">
+    <div class="container">
+        <h2 class="title">Мой профиль: @{{ user.username }}</h2>
+        <div class="profile-row">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" class="avatar" alt="{{ user.username }}">
+            {% else %}
+                <img src="{% static 'images/avatar.svg' %}" class="avatar" alt="Default avatar">
+            {% endif %}
+
+            <div class="account-data">
+                <p><strong>Имя: </strong>ИМЯ</p>
+                <p><strong>Фамилия: </strong>ФАМИЛИЯ</p>
+                <p><strong>Номер телефона: </strong>ТЕЛЕФОН</p>
+                <p><strong>Дата регистрации: </strong>ДАТА</p>
+                <p><strong>Локация: </strong>МЕСТОПОЛОЖЕНИЕ</p>
+            </div>
+        </div>
+
+        <h2 class="title">Действия</h2>
+        <div class="action-row">
+            {% if profile.phone and profile.location and profile.avatar %}
+                <a href="{% url 'create_or_update_profile_page' %}" class="btn is-primary">Изменить профиль</a>
+                <a href="{% url 'user_boards_page' %}" class="btn is-warning">Мои объявления</a>
+            {% else %}
+                <a href="{% url 'create_or_update_profile_page' %}" class="btn is-primary">Создать профиль</a>
+            {% endif %}
+            <a href="{% url 'logout_action' %}" class="btn is-danger">Выход</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

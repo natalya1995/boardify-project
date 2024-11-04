@@ -1,69 +1,86 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title%} {%endblock%}</title>
-    <link rel="stylesheet" href="{%static './css/style.css'%}">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static './css/style.css' %}">
 </head>
 <body>
     <header class="header">
         <div class="container header-row">
-            <a href="{%static './images/logo.svg'%}" class="logo"></a>
+            <a href="{% url 'home_page' %}" class="logo">
+                <img src="{% static './images/logo.svg' %}" alt="Logo">
+            </a>
+            
             <form action="" class="search-form">
-                <input type="text" class="search-form__input" placeholder="Поиск по объявлениям">
+                <input name="q" type="text" class="search-form__input" placeholder="Поиск по объявлениям">
                 <button type="submit" class="search-form__button">
-                    <img src="{%static './images/search-icon.svg'%}" alt="Search">
+                    <img src="{% static './images/search-icon.svg' %}" alt="Search">
                 </button>
             </form>
+
         </div>
     </header>
 
     <main>
-    {%block content%}
-
-    {%endblock%}
+        <div class="center">
+            {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        {% block content %}
+        {% endblock %}
     </main>
-    
+
     <footer class="footer">
         <div class="container footer-row">
             <ul class="footer-links">
                 <li class="footer-links__item">
-                    <a href="#" class="footer-links__link">
-                        <img src="{%static './images/footer/home.svg'%}" alt="" class="footer-link__icon">
+                    <a href="{% url 'home_page' %}" class="footer-links__link">
+                        <img src="{% static './images/footer/home.svg' %}" alt="Home" class="footer-link__icon">
                         <span class="footer-link__text">Главная</span>
                     </a>
                 </li>
-                 <li class="footer-links__item">
-                        <a href="#" class="footer-links__link">
-                            <img src="{%static './images/footer/boards.svg'%}" alt="" class="footer-link__icon">
-                            <span class="footer-link__text">Oбъявления</span>
-                        </a>
-                    </li>
-    
-                 <li class="footer-links__item">
-                            <a href="#" class="footer-links__link active">
-                                <img src="{%static './images/footer/add.svg'%}" alt="" class="footer-link__icon">
-                                <span class="footer-link__text">Подать</span>
-                            </a>
-                        </li>
-                        <li class="footer-links__item">
-                            <a href="#" class="footer-links__link">
-                                <img src="{%static './images/footer/categories.svg'%}" alt="" class="footer-link__icon">
-                                <span class="footer-link__text">Категории</span>
-                            </a>
-                        </li>
-        
-                     <li class="footer-links__item">
-                                <a href="#" class="footer-links__link">
-                                    <img src="{%static './images/footer/profile.svg'%}" alt="" class="footer-link__icon">
-                                    <span class="footer-link__text">Кабинет</span>
-                                </a>
-                            </li>
+                <li class="footer-links__item">
+                    <a href="{% url 'all_boards_page' %}" class="footer-links__link">
+                        <img src="{% static './images/footer/boards.svg' %}" alt="Boards" class="footer-link__icon">
+                        <span class="footer-link__text">Объявления</span>
+                    </a>
+                </li>
+                <li class="footer-links__item">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'create_board_page' %}" class="footer-links__link active">
+                        <img src="{% static './images/footer/add.svg' %}" alt="Add" class="footer-link__icon">
+                        <span class="footer-link__text">Подать</span>
+                    </a>
+                    {% else %}
+                    <a href="#" class="footer-links__link active">
+                        <img src="{% static './images/footer/add.svg' %}" alt="Add" class="footer-link__icon">
+                        <span class="footer-link__text">Подать</span>
+                    </a>
+                    {% endif %}
+                </li>
+                <li class="footer-links__item">
+                    <a href="{% url 'categories_page' %}" class="footer-links__link">
+                        <img src="{% static './images/footer/categories.svg' %}" alt="Categories" class="footer-link__icon">
+                        <span class="footer-link__text">Категории</span>
+                    </a>
+                </li>
+                <li class="footer-links__item">
+                    <a href="{% if user.is_authenticated %}{% url 'profile_page' %}{% else %}{% url 'login_page' %}{% endif %}" class="footer-links__link">
+                        <img src="{% static './images/footer/profile.svg' %}" alt="Profile" class="footer-link__icon">
+                        <span class="footer-link__text">Кабинет</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </footer>
+
 </body>
 </html>

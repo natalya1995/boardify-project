@@ -1,0 +1,59 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %}Все объявления{% endblock %}
+
+{% block content %}
+<section class="boards">
+    <div class="container">
+        <h2 class="title">Все объявления</h2>
+        <div class="board-list">
+            {%for board in boards%}
+            <a href="ССЫЛКА" class="board-item">
+                <img src="{{board.image.url}}" alt="" class="board-item__img">
+                <h3 class="board-item__title">{{board.title}}</h3>
+                <strong class="board-item__price">{{board.price}} &#8376;</strong>
+                <span class="board-item__location">{{board.location}}</span>
+            </a>
+            {%endfor%}
+        </div>
+        <div class="center">
+            <ul class="pagination">
+                {% if boards.has_previous %}
+                    <li class="pagination-item">
+                        <a href="?page={{ boards.previous_page_number }}" class="pagination-item__link">
+                            <img src="{% static 'images/left.svg' %}" alt="Previous">
+                        </a>
+                    </li>
+                {% endif %}
+            
+                {% for page_num in boards.paginator.page_range %}
+                    {% if boards.number == page_num %}
+                        <li class="pagination-item">
+                            <a href="?page={{ page_num }}" class="pagination-item__link current">{{ page_num }}</a>
+                        </li>
+                    {% elif page_num > boards.number|add:'-3' and page_num < boards.number|add:'3' %}
+                        <li class="pagination-item">
+                            <a href="?page={{ page_num }}" class="pagination-item__link">{{ page_num }}</a>
+                        </li>
+                    {% elif page_num == 1 or page_num == boards.paginator.num_pages %}
+                        <li class="pagination-item">
+                            <a href="?page={{ page_num }}" class="pagination-item__link">{{ page_num }}</a>
+                        </li>
+                    {% elif page_num == boards.number|add:'-4' or page_num == boards.number|add:'4' %}
+                        <li class="pagination-item">...</li>
+                    {% endif %}
+                {% endfor %}
+            
+                {% if boards.has_next %}
+                    <li class="pagination-item">
+                        <a href="?page={{ boards.next_page_number }}" class="pagination-item__link">
+                            <img src="{% static 'images/right.svg' %}" alt="Next">
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            
+        </div>
+    </div>
+</section>
+{% endblock %}
