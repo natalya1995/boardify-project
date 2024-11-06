@@ -60,17 +60,17 @@ def boards_by_location_page(request, slug):
     }
     return render(request, './client/boards-by-location.html', context)
 
-def search_results_page(request):
-    query=request.GET.get('q')
-    boards=Board.objects.filter(title__icontains=query,is_active_board=True)
-    paginator=Paginator(boards,12)
-    page_number=request.GET.get('page')
-    search_boards=paginator.get_page(page_number)
-    context={
-        'search_boards':search_boards,
-        'query':query
+def search_results(request):
+    query = request.GET.get('q')
+    board_list = Board.objects.filter(title__icontains=query, is_active_board=True)
+    paginator = Paginator(board_list, 12)
+    page_number = request.GET.get('page')
+    boards = paginator.get_page(page_number)
+    context = {
+        'query': query,
+        'boards': boards
     }
-    return render(request,"./client/search-results.html",context)
+    return render(request, './client/search-results.html', context)
 
 def boards_by_category_page(request,slug):
     category=get_object_or_404(Category,slug=slug)
@@ -126,18 +126,18 @@ def login_page(request):
     return render(request,"./user/login.html",context)
 
 def sign_up_page(request):
-    if request.method=="POST":
-        form=UserRegistrationForm(request.POST)
-        if form.is_valid:
-           form.save()
-           messages.success(request,"")
-           return redirect('login_page')
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Учетная запись успешно создана!')
+            return redirect('login_page')
     else:
-        form=UserRegistrationForm()
-    context={
-        'form':form
-    }
-    return render(request,"./user/sign-up.html",context)
+        form = UserRegistrationForm()
+    context = {
+        'form': form
+    }    
+    return render(request, './user/sign-up.html', context)
 
 def logout_action(request):
     logout(request)
@@ -180,22 +180,23 @@ def create_board_page(request):
  
 @login_required
 def success_page(request):
-    return render(request,"./user/success.html")
+    return render(request,"./user/success-board.html")
 
 @login_required
-def update_board_page(request,pk):
-    board=get_object_or_404(Board,pk=pk, userprofile__user=request.user)
-    if request.method=="POST":
-        form=BoardForm(request.POST,request.FILES,instance=board)
-        messages.success(request,"Объявление обнавлено!")
-        return redirect('user_board_page')
+def update_board_page(request, pk):
+    board = get_object_or_404(Board, pk=pk, userprofile__user=request.user)
+    if request.method == 'POST':
+        form = BoardForm(request.POST, request.FILES, instance=board)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Объявление успешно обновлено!')
+            return redirect('user_boards_page')
     else:
-        form=BoardForm(instance=board)
-    context={
-        'board':board,
-        'form':form
+        form = BoardForm(instance=board)
+    context = {
+        'form': form
     }
-    return render(request,"./user/update-board.html",context)
+    return render(request, './user/update-board.html', context)
 
 @login_required
 def delete_board_page(request, pk):
@@ -207,7 +208,7 @@ def delete_board_page(request, pk):
     context = {
         'board': board
     }
-    return render(request, './client/delete-board.html', context)
+    return render(request, './user/delete-board.html', context)
 
 @login_required
 def create_or_update_profile_page(request):
@@ -223,4 +224,4 @@ def create_or_update_profile_page(request):
     context = {
         'form': form
     }
-    return render(request, './client/create-or-update-profile.html', context)
+    return render(request, './user/create-or-update-profile.html', context)

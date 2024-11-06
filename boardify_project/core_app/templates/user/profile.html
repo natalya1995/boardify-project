@@ -25,11 +25,11 @@
             {% endif %}
 
             <div class="account-data">
-                <p><strong>Имя: </strong>ИМЯ</p>
-                <p><strong>Фамилия: </strong>ФАМИЛИЯ</p>
-                <p><strong>Номер телефона: </strong>ТЕЛЕФОН</p>
-                <p><strong>Дата регистрации: </strong>ДАТА</p>
-                <p><strong>Локация: </strong>МЕСТОПОЛОЖЕНИЕ</p>
+                <p><strong>Имя: </strong>{{ user.first_name|default:"Не указано" }}</p>
+                <p><strong>Фамилия: </strong>{{ user.last_name|default:"Не указано" }}</p>
+                <p><strong>Номер телефона: </strong>{{ profile.phone|default:"Не указано" }}</p>
+                <p><strong>Дата регистрации: </strong>{{ profile.created_at|date:"d.m.Y" }}</p>
+                <p><strong>Локация: </strong>{{ profile.location.name|default:"Не указано" }}</p>
             </div>
         </div>
 

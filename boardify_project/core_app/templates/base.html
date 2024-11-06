@@ -14,7 +14,7 @@
                 <img src="{% static './images/logo.svg' %}" alt="Logo">
             </a>
             
-            <form action="" class="search-form">
+            <form action="{% url 'search_results' %}" class="search-form">
                 <input name="q" type="text" class="search-form__input" placeholder="Поиск по объявлениям">
                 <button type="submit" class="search-form__button">
                     <img src="{% static './images/search-icon.svg' %}" alt="Search">

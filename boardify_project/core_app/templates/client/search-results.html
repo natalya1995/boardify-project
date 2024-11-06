@@ -1,19 +1,21 @@
 {% extends '../base.html' %}
 {% load static %}
-{% block title %}{% endblock %}
+{% block title %}{{ query }}{% endblock %}
 
 {% block content %}
 <section class="boards">
     <div class="container">
-        <h2 class="title">Найдено по запросу </h2>
+        <h2 class="title">Найдено по запросу {{ query }}</h2>
         {% if boards %}
         <div class="board-list">
-            <a href="" class="board-item">
-                <img src="" alt="" class="board-item__img">
-                <h3 class="board-item__title"></h3>
-                <strong class="board-item__price">₸</strong>
-                <span class="board-item__location"></span>
+            {% for board in boards %}
+            <a href="{% url 'board_detail_page' pk=board.pk %}" class="board-item">
+                <img src="{{ board.image.url }}" alt="{{ board.title }}" class="board-item__img">
+                <h3 class="board-item__title">{{ board.title|truncatechars:22 }}</h3>
+                <strong class="board-item__price">{{ board.price }} ₸</strong>
+                <span class="board-item__location">{{ board.location }}</span>
             </a>
+            {% endfor %}
         </div>
         <div class="center">
             <ul class="pagination">
